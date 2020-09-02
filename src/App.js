@@ -115,18 +115,20 @@ class About extends Component {
 
   componentDidMount(){
     fetchReq('/api/fetchDB').then(data => {
-      const pick_data = _.map(data, (item, index) => {
+      return _.map(data, (item, index) => {
         let obj = {}
         _.forEach(this.fields, (_item, _index) => {
           obj[_item] = item[_item] || ''
         })   
         return obj;
       })
-
+    })
+    .then(data => {
       this.setState(
-        { data: pick_data }
+        { data }
       )
-    }).catch( err =>  console.log(err) );
+    })
+    .catch( err =>  console.log(err) );
   }
 
   handleChange(event) {
