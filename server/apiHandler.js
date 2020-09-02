@@ -13,4 +13,21 @@ router.post('/api/post', (req, res) => {
     );
 });
 
+router.post('/api/fetchDB', (req, res) => {
+    res.app.get('connection').query('SELECT * FROM Transactions', function(err, rows){
+        if(err){
+            res.status(401).json({
+                success: false,
+                msg: err.sqlMessage
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                data: rows
+            })
+        }
+    })
+
+});
+
 module.exports = router;
