@@ -1,47 +1,66 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 export default class Table extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            filteredData: props.data,
+            columns: props.columns,
+            filterInput: ""
+        };
     }
 
-    getTHead(header) {
-        return _.map(header, (item, index) => {
-            return <th key={`tHeader-${index}`}><label>{item}</label></th>
-        })
+    componentWillReceiveProps(nextProps) {
+        if (nextProps !== this.props) {
+            this.setState({
+                columns: [...nextProps.columns],
+                filteredData: [...nextProps.data]
+            });
+        }
     }
 
-    getTData(data) {
-        if (data){
-            const keys = data.length > 0 ? Object.keys(data[0]) : null;
+    handleGlobalFilterChange = e => {
+        const value = e.target.value || "";
+        this.setState({ filterInput: value }, () => {
+            this.globalSearch();
+        });
+    };
 
-            return _.map(data, (item, index) => {
-                const row =  _.map(keys, (key, index) => {
-                    return <td key={`key-${index}`}>
-                                {item[key]}
-                            </td>
-                });
+    globalSearch = () => {
+        const { filterInput } = this.state;
+        const { data, columns } = this.props;
+        
+        const filteredData = _.filter(data, item => {
+            let condition = false;
 
-                return <tr key={`tData-${index}`}>{ row }</tr>
+            _.forEach(columns, (_item, _index) => {
+                condition = condition || item[_item.accessor].toString().toLowerCase().includes(filterInput.toLowerCase()) 
             })
-        }     
-    }
+            return condition;
+        });
+        this.setState({ filteredData });
+    };
 
     render() {
-        const props = this.props;
+        let { filteredData, columns, filterInput } = this.state;
 
         return (
             <div>
-                <table>
-                    <thead>
-                        <tr>{this.getTHead(props.header)}</tr>
-                    </thead>
-                    <tbody>
-                        {this.getTData(props.data)}
-                    </tbody>
-                </table>
+                <input
+                    value={filterInput}
+                    onChange={this.handleGlobalFilterChange}
+                    placeholder={"Global search"}
+                />
+                <ReactTable
+                    data={filteredData}
+                    columns={columns}
+                    defaultPageSize={10}
+                />
             </div>
         )
     }
+
 }

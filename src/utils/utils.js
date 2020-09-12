@@ -18,6 +18,18 @@ export function fetchReq(path, opt = {}){
         })
   }
 
+  export function fetchStream(path, opt = {}){
+    const options = {
+      method: opt.method || 'POST',
+      headers: opt.headers || {
+        'Content-Type': 'application/json',
+      },
+      body: opt.body || null
+    }
+    return fetch(path, options)
+      .then(res => res.blob())
+  }
+
   export function isLoggedIn() {
     return localStorage.getItem('token');
   }

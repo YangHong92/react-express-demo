@@ -5,7 +5,8 @@ import {
   Redirect,
   NavLink, useHistory, useLocation
 } from 'react-router-dom';
-import { isLoggedIn, login, fetchReq } from './utils/utils';
+import FileSaver from 'file-saver';
+import { isLoggedIn, login, fetchReq, fetchStream } from './utils/utils';
 import logo from './logo.svg';
 import Table from './components/table';
 import _ from 'lodash';
@@ -103,43 +104,57 @@ class About extends Component {
       get: '',
       name: '',
       param: '',
-      data: []
+      data: [],
+      selectedFile: null,
+      fileName: null
     };
 
-    this.fields = ['amount', 'transaction_id', 'transaction_type']
+    this.columns = [
+      {
+        Header: 'Amount',
+        // accessor is the "key" in the data
+        accessor: 'amount',
+        sortable: true
+      },
+      {
+        Header: 'transaction ID',
+        accessor: 'transaction_id',
+      },
+      {
+        Header: 'Transaction Type',
+        accessor: 'transaction_type',
+      }
+    ]
 
-    this.handleChange = this.handleChange.bind(this);
     this.handleGetSubmit = this.handleGetSubmit.bind(this);
     this.handlePostSubmit = this.handlePostSubmit.bind(this);
+    this.singleFileUploadHandler = this.singleFileUploadHandler.bind(this);
+    this.singleFileDownloadHandler = this.singleFileDownloadHandler.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     fetchReq('/api/fetchDB').then(data => {
       return _.map(data, (item, index) => {
         let obj = {}
-        _.forEach(this.fields, (_item, _index) => {
-          obj[_item] = item[_item] || ''
-        })   
+        _.forEach(this.columns, (_item, _index) => {
+          obj[_item.accessor] = item[_item.accessor] || ''
+        })
         return obj;
       })
     })
-    .then(data => {
-      this.setState(
-        { data }
-      )
-    })
-    .catch( err =>  console.log(err) );
-  }
-
-  handleChange(event) {
-    this.setState({ name: event.target.value });
+      .then(data => {
+        this.setState(
+          { data }
+        )
+      })
+      .catch(err => alert(err));
   }
 
   handleGetSubmit(event) {
     event.preventDefault();
     fetch(`/api/get?name=${encodeURIComponent(this.state.name)}`)
       .then(response => response.json())
-      .then(state => this.setState(state));
+      .then(body => this.setState({ get: body.get }));
   }
 
   handlePostSubmit = (event) => {
@@ -156,6 +171,48 @@ class About extends Component {
       .then(body => this.setState({ post: body }));
   }
 
+  singleFileUploadHandler = () => {
+    if (this.state.selectedFile) {
+      const data = new FormData();
+
+      data.append('username', 'abc123');
+
+      // the name for file must be 'file' to match multer.single('file')
+      data.append('file', this.state.selectedFile, this.state.selectedFile.name);
+
+      const option = {
+        // overwrite header to avoid default setting 'Content-Type': 'application/json' 
+        // in file submit, Content-Type: multipart/form-data; 
+        headers: {
+          'accept': 'application/json'
+        },
+        body: data
+      }
+      fetchReq('/api/file/upload', option)
+        .then(fileName => { this.setState(fileName) })
+        .catch(err => alert(err));
+    }
+  }
+
+  singleFileDownloadHandler = () => {
+    if (this.state.fileName) {
+      const option = {
+        method: 'GET'
+      }
+      fetchStream(`/api/file/${this.state.fileName}`, option)
+        .then(blob => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `sample.${this.state.fileName}`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        })
+        .catch(err => alert(err));
+    }
+  }
+
   render() {
     return (
       <div>
@@ -165,7 +222,7 @@ class About extends Component {
             id="name"
             type="text"
             value={this.state.name}
-            onChange={this.handleChange}
+            onChange={e => this.setState({ name: e.target.value })}
           />
           <button type="submit">Submit</button>
         </form>
@@ -183,7 +240,22 @@ class About extends Component {
         </form>
         <p>{this.state.post}</p>
 
-        <Table header={this.fields} data={this.state.data}/>
+        <Table columns={this.columns} data={this.state.data} />
+
+        <input
+          type="file"
+          onChange={e => this.setState({ selectedFile: e.target.files[0] })}
+        />
+        <button onClick={this.singleFileUploadHandler}>Upload File</button>
+
+        {
+          this.state.fileName !== null ?
+            <div>
+              <p>uploaded {this.state.fileName}</p>
+              <button onClick={this.singleFileDownloadHandler}>Download File</button>
+            </div>
+            : null
+        }
       </div>
     );
   }
