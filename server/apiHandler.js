@@ -4,27 +4,27 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 const path = require('path');
-
+const jwtUtil = require('./jwtUtil');
 const fsConfig = require('./fsConfig');
 const __env__ = process.env.NODE_ENV;
-const s3Client = new AWS.S3(fsConfig.s3Client[__env__]);
-const bucket = fsConfig.bucket[__env__];
+// const s3Client = new AWS.S3(fsConfig.s3Client[__env__]);
+// const bucket = fsConfig.bucket[__env__];
 
 // multipart/form-data , which is primarily used for uploading files
 // const upload = multer({ dest: './uploads/' })
-const singleUpload = multer({
-    // storage: multer.memoryStorage(),
-    storage: multerS3({
-        s3: s3Client,
-        bucket: bucket,
-        key: function (req, file, cb) {
-            cb(null, Date.now().toString() + path.extname(file.originalname))
-        }
-    }),
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-}).single("file");
+// const singleUpload = multer({
+//     // storage: multer.memoryStorage(),
+//     storage: multerS3({
+//         s3: s3Client,
+//         bucket: bucket,
+//         key: function (req, file, cb) {
+//             cb(null, Date.now().toString() + path.extname(file.originalname))
+//         }
+//     }),
+//     fileFilter: function (req, file, cb) {
+//         checkFileType(file, cb);
+//     }
+// }).single("file");
 
 function checkFileType(file, cb) {
     const filetypes = /doc|docx|pdf|jpeg|jpg|png/;
@@ -52,6 +52,62 @@ router.post('/api/post', (req, res) => {
     );
 });
 
+router.post('/api/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    req.session.token = jwtUtil.generateTokenByRole('admin');
+    res.status(200).json({
+        success: true,
+        data: {
+            email,
+            password,
+            token: req.session.token
+        }
+    });
+});
+
+router.get('/api/verifytoken', (req, res) => {
+    const token = req.session.token
+
+    jwtUtil.verifyRoleFromToken(token)
+        .then((role) => {
+            if (role === 'admin') {
+                res.send(
+                    `token verified: ${role}`,
+                );
+            } else {
+                res.send(
+                    `role permission denied`,
+                );
+            }
+        }).catch(err => {
+            res.send(
+                `err: ${err}`,
+            );
+        })
+});
+
+router.post('/api/logout', (req, res) => {
+    req.session.destroy(function (err) {
+        if (err) {
+            res.status(400).json({
+                success: false,
+                msg: 'failed clear session'
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                data: {
+                    session: 'session destroyed'
+                }
+            });
+        }
+    });
+});
+
+/**
+ For purpurse of avoiding cost and security warning, not allow database and S3 connection 
+* 
 router.post('/api/fetchDB', (req, res) => {
     res.app.get('connection').query('SELECT * FROM Transactions', function (err, rows) {
         if (err) {
@@ -85,7 +141,7 @@ router.post('/api/file/upload', (req, res) => {
             }
             res.status(200).json({
                 success: true,
-                data: { 
+                data: {
                     fileName: req.file.key
                 }
             });
@@ -110,5 +166,5 @@ router.get('/api/file/:filename', (req, res) => {
             });
         }).pipe(res);
 })
-
+*/
 module.exports = router;

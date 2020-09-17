@@ -28,7 +28,12 @@ app.use(methodOverride());
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: 'uwotm8'
+  secret: 'uwotm8',
+  cookie: {
+    httpOnly: true, // blocks the ability to use the document.cookie object. This prevents XSS attacks from stealing the session identifier.
+    maxAge: 86400000 // expiry time (miliseconds) for variable stored in req.session (e.g. req.session.id)
+  },
+  name: "cookie" // change the name of cookie
 }));
 // Pug (a template engines) replace variables in our file with actual values, 
 // and then send the resulting HTML string to the client.
@@ -60,23 +65,23 @@ function init() {
     app.use(errorHandler())
   }
 }
+init();
+// app.set('connection', mysql.createConnection(dbConfig.rdsClient[__env__]))
+// const client = app.get('connection');
 
-app.set('connection', mysql.createConnection(dbConfig.rdsClient[__env__]))
-const client = app.get('connection');
-
-async.series([
-  function connect(callback) {
-    client.connect(callback);
-  },
-  function use_db(callback) {
-    client.query(`USE ${dbConfig.database[__env__]}`, callback);
-  },
-], (err, results) => {
-  if (err) {
-    console.log('Exception connecting database.');
-    throw err;
-  } else {
-    console.log('Database initialization complete.');
-    init();
-  }
-});
+// async.series([
+//   function connect(callback) {
+//     client.connect(callback);
+//   },
+//   function use_db(callback) {
+//     client.query(`USE ${dbConfig.database[__env__]}`, callback);
+//   },
+// ], (err, results) => {
+//   if (err) {
+//     console.log('Exception connecting database.');
+//     throw err;
+//   } else {
+//     console.log('Database initialization complete.');
+//     init();
+//   }
+// });

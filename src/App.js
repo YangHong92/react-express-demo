@@ -5,8 +5,7 @@ import {
   Redirect,
   NavLink, useHistory, useLocation
 } from 'react-router-dom';
-import FileSaver from 'file-saver';
-import { isLoggedIn, login, fetchReq, fetchStream } from './utils/utils';
+import { isLoggedIn, login, logout, fetchReq, fetchStream } from './utils/utils';
 import logo from './logo.svg';
 import Table from './components/table';
 import _ from 'lodash';
@@ -62,9 +61,17 @@ function LoginPage() {
 
   let { from } = location.state || { from: { pathname: "/" } };
   let handleLogin = () => {
-    login();
-    history.replace("/home");
-
+    fetchReq('/api/login', {
+      body: JSON.stringify({
+        email: 'admin',
+        password: '123456'
+      })
+    }).then(data => {
+      login(data.token);
+      history.replace("/home");
+    }).catch(msg =>
+      alert(msg)
+    )
   };
 
   return (
@@ -73,6 +80,27 @@ function LoginPage() {
       <button onClick={handleLogin}>Log in</button>
     </div>
   );
+}
+
+function LogoutPage() {
+  let history = useHistory();
+  
+  let handleLogout = (e) => {
+    e.preventDefault();
+
+    fetchReq('/api/logout')
+      .then(data => {
+        logout();
+        history.push('/login')
+      }).catch(msg =>
+        alert(msg)
+      )
+  }
+  return (
+    <button onClick={handleLogout}>
+      Logout
+    </button>
+  )
 }
 
 function Home() {
@@ -133,21 +161,21 @@ class About extends Component {
   }
 
   componentDidMount() {
-    fetchReq('/api/fetchDB').then(data => {
-      return _.map(data, (item, index) => {
-        let obj = {}
-        _.forEach(this.columns, (_item, _index) => {
-          obj[_item.accessor] = item[_item.accessor] || ''
-        })
-        return obj;
-      })
-    })
-      .then(data => {
-        this.setState(
-          { data }
-        )
-      })
-      .catch(err => alert(err));
+    // fetchReq('/api/fetchDB').then(data => {
+    //   return _.map(data, (item, index) => {
+    //     let obj = {}
+    //     _.forEach(this.columns, (_item, _index) => {
+    //       obj[_item.accessor] = item[_item.accessor] || ''
+    //     })
+    //     return obj;
+    //   })
+    // })
+    //   .then(data => {
+    //     this.setState(
+    //       { data }
+    //     )
+    //   })
+    //   .catch(err => alert(err));
   }
 
   handleGetSubmit(event) {
@@ -199,23 +227,24 @@ class About extends Component {
       const option = {
         method: 'GET'
       }
-      fetchStream(`/api/file/${this.state.fileName}`, option)
-        .then(blob => {
-          const url = window.URL.createObjectURL(new Blob([blob]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', `sample.${this.state.fileName}`);
-          document.body.appendChild(link);
-          link.click();
-          link.parentNode.removeChild(link);
-        })
-        .catch(err => alert(err));
+      // fetchStream(`/api/file/${this.state.fileName}`, option)
+      //   .then(blob => {
+      //     const url = window.URL.createObjectURL(new Blob([blob]));
+      //     const link = document.createElement('a');
+      //     link.href = url;
+      //     link.setAttribute('download', `sample.${this.state.fileName}`);
+      //     document.body.appendChild(link);
+      //     link.click();
+      //     link.parentNode.removeChild(link);
+      //   })
+      //   .catch(err => alert(err));
     }
   }
 
   render() {
     return (
       <div>
+        <LogoutPage />
         <form onSubmit={this.handleGetSubmit}>
           <label htmlFor="name">Test GET Request: </label>
           <input
