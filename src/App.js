@@ -9,6 +9,7 @@ import { isLoggedIn, login, logout, fetchReq, fetchStream } from './utils/utils'
 import logo from './logo.svg';
 import Table from './components/table';
 import _ from 'lodash';
+import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 class App extends Component {
