@@ -7,17 +7,17 @@ const rdsClient = {
         port: '3306'
     },
     dev: {
-        // AWS RDS info
-        host: 'nodeappmysql.cz7jwgpwtdgk.eu-west-2.rds.amazonaws.com',
-        user: 'admin',
-        password: '12345678',
+        // localhost
+        host: 'localhost',
+        user: 'root',
+        password: '1234567890',
         port: '3306'
     }
 }
 
 const database = {
     prod: 'Transactions_Prod',
-    dev: 'Transactions_Prod'
+    dev: 'portal_system'
 }
 
 module.exports = {

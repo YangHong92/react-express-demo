@@ -5,7 +5,7 @@ import {
   Redirect,
   NavLink, useHistory, useLocation
 } from 'react-router-dom';
-import { isLoggedIn, login, logout, fetchReq, fetchStream } from './utils/utils';
+import { getToken, setToken, removeToken, fetchReq, fetchStream } from './utils/utils';
 import logo from './logo.svg';
 import Table from './components/table';
 import _ from 'lodash';
@@ -49,7 +49,7 @@ function PrivateRoute({ children, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(location) => isLoggedIn() != null
+      render={(location) => getToken() != null
         ? children
         : <Redirect to={{ pathname: '/login' }} />}
     />
@@ -68,7 +68,7 @@ function LoginPage() {
         password: '123456'
       })
     }).then(data => {
-      login(data.token);
+      setToken(data.token);
       history.replace("/home");
     }).catch(msg =>
       alert(msg)
@@ -91,7 +91,7 @@ function LogoutPage() {
 
     fetchReq('/api/logout')
       .then(data => {
-        logout();
+        removeToken();
         history.push('/login')
       }).catch(msg =>
         alert(msg)
@@ -162,21 +162,21 @@ class About extends Component {
   }
 
   componentDidMount() {
-    // fetchReq('/api/fetchDB').then(data => {
-    //   return _.map(data, (item, index) => {
-    //     let obj = {}
-    //     _.forEach(this.columns, (_item, _index) => {
-    //       obj[_item.accessor] = item[_item.accessor] || ''
-    //     })
-    //     return obj;
-    //   })
-    // })
-    //   .then(data => {
-    //     this.setState(
-    //       { data }
-    //     )
-    //   })
-    //   .catch(err => alert(err));
+    fetchReq('/api/fetchDB').then(data => {
+      return _.map(data, (item, index) => {
+        let obj = {}
+        _.forEach(this.columns, (_item, _index) => {
+          obj[_item.accessor] = item[_item.accessor] || ''
+        })
+        return obj;
+      })
+    })
+      .then(data => {
+        this.setState(
+          { data }
+        )
+      })
+      .catch(err => alert(err));
   }
 
   handleGetSubmit(event) {

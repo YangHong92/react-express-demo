@@ -30,15 +30,19 @@ export function fetchReq(path, opt = {}){
       .then(res => res.blob())
   }
 
-  export function isLoggedIn() {
+  export function getToken() {
     return localStorage.getItem('token');
   }
 
-  export function login(token) {
+  export function setToken(token) {
     localStorage.setItem('token', token);
   }
 
-  export function logout() {
+  export function removeToken() {
     // Clear user token and profile data from localStorage
     localStorage.removeItem('token');
+  }
+
+  export function isValidDate(d) {
+    return d instanceof Date && !isNaN(d);
   }
