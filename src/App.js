@@ -5,10 +5,11 @@ import {
   Redirect,
   NavLink, useHistory, useLocation
 } from 'react-router-dom';
-import { getToken, setToken, removeToken, fetchReq, fetchStream } from './utils/utils';
+import { removeToken, fetchReq } from './utils/utils';
 import logo from './logo.svg';
 import Table from './components/table';
 import _ from 'lodash';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
@@ -21,88 +22,30 @@ class App extends Component {
     return (
       <div>
         <nav>
-          <NavLink to="/home" activeClassName="App-link">Home</NavLink>
+          <NavLink to="/s/home" activeClassName="App-link">Home</NavLink>
           <br></br>
-          <NavLink to="/about" activeClassName="App-link">About</NavLink>
+          <NavLink to="/s/about" activeClassName="App-link">About</NavLink>
         </nav>
 
-        <Switch>
-          {/* If URL is /about, this route is rendered
-              while the rest are ignored */}
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <PrivateRoute path="/about">
-            <About />
-          </PrivateRoute>
-          {/* fallback route */}
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
+        <main>
+          <Switch>
+            <Route path="/s/home">
+              <Home />
+            </Route>
+            <Route path="/s/about">
+              <About />
+            </Route>
+            <Route path="/s">
+              <Redirect to='/s/home' />
+            </Route>
+          </Switch>
+        </main>
+
       </div>
     );
   }
 }
 
-function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={(location) => getToken() != null
-        ? children
-        : <Redirect to={{ pathname: '/login' }} />}
-    />
-  )
-}
-
-function LoginPage() {
-  let history = useHistory();
-  let location = useLocation();
-
-  let { from } = location.state || { from: { pathname: "/" } };
-  let handleLogin = () => {
-    fetchReq('/api/login', {
-      body: JSON.stringify({
-        email: 'admin',
-        password: '123456'
-      })
-    }).then(data => {
-      setToken(data.token);
-      history.replace("/home");
-    }).catch(msg =>
-      alert(msg)
-    )
-  };
-
-  return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={handleLogin}>Log in</button>
-    </div>
-  );
-}
-
-function LogoutPage() {
-  let history = useHistory();
-  
-  let handleLogout = (e) => {
-    e.preventDefault();
-
-    fetchReq('/api/logout')
-      .then(data => {
-        removeToken();
-        history.push('/login')
-      }).catch(msg =>
-        alert(msg)
-      )
-  }
-  return (
-    <button onClick={handleLogout}>
-      Logout
-    </button>
-  )
-}
 
 function Home() {
   return (
@@ -124,6 +67,30 @@ function Home() {
     </div>
   )
 }
+
+
+function LogoutPage() {
+  let history = useHistory();
+
+  let handleLogout = (e) => {
+    e.preventDefault();
+
+    fetchReq('/api/logout')
+      .then(data => {
+        removeToken();
+        history.push('/login')
+      }).catch(msg =>
+        alert(msg)
+      )
+  }
+  return (
+    <button onClick={handleLogout}>
+      Logout
+    </button>
+  )
+}
+
+
 
 class About extends Component {
   constructor(props) {
