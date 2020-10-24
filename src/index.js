@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect, useHistory, useLocation } from "react-router-dom";
 import { getToken, setToken, fetchReq } from './utils/utils';
 import App from './App';
+import Home from './pages/Home';
 
 import './index.css';
 import * as serviceWorker from './serviceWorker';
@@ -15,12 +16,15 @@ ReactDOM.render(
         <Route path="/login">
           <LoginPage />
         </Route>
+        <Route exact path="/home">
+          <Home />
+        </Route>
         <PrivateRoute path="/s">
           <App />
         </PrivateRoute>
         {/* fallback route */}
         <Route path="/">
-          <Redirect to="/login" />
+          <Redirect to="/home" />
         </Route>
       </Switch>
     </BrowserRouter>
