@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect, useHistory, useLocation } from "react-router-dom";
-import { getToken, setToken, fetchReq } from './utils/utils';
-import App from './App';
-import Home from './pages/Home';
+import { getToken } from './utils/utils';
+import AppS from './pages/AppS';
+import App from './pages/App';
+import LoginPage from './pages/LoginPage';
 
-import './index.css';
 import * as serviceWorker from './serviceWorker';
+import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
@@ -15,16 +16,12 @@ ReactDOM.render(
       <Switch>
         <Route path="/login">
           <LoginPage />
-        </Route>
-        <Route exact path="/home">
-          <Home />
-        </Route>
+        </Route>  
         <PrivateRoute path="/s">
-          <App />
+          <AppS />
         </PrivateRoute>
-        {/* fallback route */}
         <Route path="/">
-          <Redirect to="/home" />
+          <App />
         </Route>
       </Switch>
     </BrowserRouter>
@@ -41,33 +38,6 @@ function PrivateRoute({ children, ...rest }) {
         : <Redirect to={{ pathname: '/login' }} />}
     />
   )
-}
-
-function LoginPage() {
-  let history = useHistory();
-  let location = useLocation();
-
-  let { from } = location.state || { from: { pathname: "/" } };
-  let handleLogin = () => {
-    fetchReq('/api/login', {
-      body: JSON.stringify({
-        email: 'admin',
-        password: '123456'
-      })
-    }).then(data => {
-      setToken(data.token);
-      history.replace("/s/home");
-    }).catch(msg =>
-      alert(msg)
-    )
-  };
-
-  return (
-    <div>
-      <p>You must log in to view the page at {from.pathname}</p>
-      <button onClick={handleLogin}>Log in</button>
-    </div>
-  );
 }
 
 // If you want your app to work offline and load faster, you can change

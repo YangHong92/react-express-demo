@@ -5,15 +5,15 @@ import {
   Redirect,
   NavLink, useHistory, useLocation
 } from 'react-router-dom';
-import { removeToken, fetchReq } from './utils/utils';
-import logo from './logo.svg';
-import Table from './components/table';
+import { fetchReq } from '../../utils/utils';
+import logo from '../../img/logo.svg';
+import Table from '../../components/table';
+import LogoutButton from '../LogoutButton';
 import _ from 'lodash';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import './App.css';
+import '../../styles/App.css';
 
-class App extends Component {
+class AppS extends Component {
   constructor(props) {
     super(props);
   }
@@ -22,9 +22,11 @@ class App extends Component {
     return (
       <div>
         <nav>
-          <NavLink to="/s/home" activeClassName="App-link">Home</NavLink>
-          <br></br>
-          <NavLink to="/s/about" activeClassName="App-link">About</NavLink>
+          <NavLink to="/s/home" activeClassName="App-link">SHome</NavLink>
+          <br/>
+          <NavLink to="/s/about" activeClassName="App-link">SMore</NavLink>
+          <br/>
+          <NavLink to="/home" activeClassName="App-link">Home</NavLink>
         </nav>
 
         <main>
@@ -67,30 +69,6 @@ function Home() {
     </div>
   )
 }
-
-
-function LogoutPage() {
-  let history = useHistory();
-
-  let handleLogout = (e) => {
-    e.preventDefault();
-
-    fetchReq('/api/logout')
-      .then(data => {
-        removeToken();
-        history.push('/login')
-      }).catch(msg =>
-        alert(msg)
-      )
-  }
-  return (
-    <button onClick={handleLogout}>
-      Logout
-    </button>
-  )
-}
-
-
 
 class About extends Component {
   constructor(props) {
@@ -212,7 +190,7 @@ class About extends Component {
   render() {
     return (
       <div>
-        <LogoutPage />
+        <LogoutButton />
         <form onSubmit={this.handleGetSubmit}>
           <label htmlFor="name">Test GET Request: </label>
           <input
@@ -258,4 +236,4 @@ class About extends Component {
   }
 }
 
-export default App;
+export default AppS;
