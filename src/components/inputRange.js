@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import '../styles/inputrange.css';
+import '../styles/inputrange.scss';
 
 export default class InputRange extends Component {
     constructor(props) {

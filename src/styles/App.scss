@@ -15,7 +15,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -46,4 +46,9 @@
   height: 100%;
   overflow: hidden;
   background-position: top left;
+}
+
+.bannerS{
+  @extend .banner;
+  background-image: url('../img/bannerS.jpg');
 }

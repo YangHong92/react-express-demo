@@ -7,7 +7,7 @@ import App from './pages/App';
 import LoginPage from './pages/LoginPage';
 
 import * as serviceWorker from './serviceWorker';
-import './index.css';
+import './index.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(

@@ -3,12 +3,13 @@ import {
   Switch,
   Route,
   Redirect,
-  NavLink, useHistory, useLocation
+  NavLink
 } from 'react-router-dom';
-import logo from '../../img/logo.svg';
 import _ from 'lodash';
+import logo from '../../img/logo.svg';
+import Dashboard from '../Dashboard';
 
-import '../../styles/App.css';
+import '../../styles/App.scss';
 
 class App extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class App extends Component {
                     <NavLink to="/home" activeClassName="App-link">Home</NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/about" activeClassName="App-link">About</NavLink>
+                    <NavLink to="/dashboard" activeClassName="App-link">Dashboard</NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink to="/s" activeClassName="App-link">
@@ -45,7 +46,7 @@ class App extends Component {
 
           <div className="row">
             <div className="col-md-6 px-3 text-primary text-right">
-              <h1 className="display-4">Website <br /> Slogan</h1>
+              <h1 className="display-4">Website Slogan</h1>
             </div>
           </div>
         </section>
@@ -55,8 +56,8 @@ class App extends Component {
             <Route exact path="/home">
               <Home />
             </Route>
-            <Route exact path="/about">
-              <About />
+            <Route exact path="/dashboard">
+              <Dashboard />
             </Route>
             <Route exact path="/">
               <Redirect to='/home' />
@@ -69,22 +70,11 @@ class App extends Component {
   }
 }
 
-
 function Home() {
   return (
     <div className="App">
       <div className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-      </div>
-    </div>
-  )
-}
-
-function About() {
-  return (
-    <div className="App">
-      <div className="App-header">
-        About Page
       </div>
     </div>
   )
