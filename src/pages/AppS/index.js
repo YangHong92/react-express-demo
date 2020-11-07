@@ -10,6 +10,7 @@ import Table from '../../components/table';
 import LogoutButton from '../LogoutButton';
 import _ from 'lodash';
 
+import logo from '../../img/logo.svg';
 import '../../styles/App.scss';
 
 class AppS extends Component {
@@ -77,6 +78,7 @@ function Home() {
     <div className="App">
       <header className="App-header">
         <div className="spinner"></div>
+        <img src={logo} className="App-logo" alt="logo" />
       </header>
     </div>
   )

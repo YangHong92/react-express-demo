@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const { createTransportConfig, mailSender } = require('./mailerConfig');
+const { createTransportConfig, mailSender } = require('./config/mailerConfig');
 
 const transporter = nodemailer.createTransport(createTransportConfig);
 

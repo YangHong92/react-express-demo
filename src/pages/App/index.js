@@ -6,12 +6,12 @@ import {
   NavLink
 } from 'react-router-dom';
 import _ from 'lodash';
-import logo from '../../img/logo.svg';
+import VgChart from '../VgChart';
 import Dashboard from '../Dashboard';
 
 import '../../styles/App.scss';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
   }
@@ -22,14 +22,14 @@ class App extends Component {
         <section className="banner">
           <header>
             <nav className="navbar navbar-expand-lg navbar-light bg-transperent px-3">
-              <NavLink className="navbar-brand" to="/home"><h2>Welcome</h2></NavLink>
+              <NavLink className="navbar-brand" to="/chart"><h2>Welcome</h2></NavLink>
               <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
               </button>
               <div className="collapse navbar-collapse" id="navbarToggler">
                 <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
                   <li className="nav-item">
-                    <NavLink to="/home" activeClassName="App-link">Home</NavLink>
+                    <NavLink to="/chart" activeClassName="App-link">Chart</NavLink>
                   </li>
                   <li className="nav-item">
                     <NavLink to="/dashboard" activeClassName="App-link">Dashboard</NavLink>
@@ -53,14 +53,14 @@ class App extends Component {
 
         <main>
           <Switch>
-            <Route exact path="/home">
-              <Home />
+            <Route exact path="/chart">
+              <VgChart />
             </Route>
             <Route exact path="/dashboard">
               <Dashboard />
             </Route>
-            <Route exact path="/">
-              <Redirect to='/home' />
+            <Route path="/">
+              <Redirect to="/chart" />
             </Route>
           </Switch>
         </main>
@@ -69,15 +69,3 @@ class App extends Component {
     );
   }
 }
-
-function Home() {
-  return (
-    <div className="App">
-      <div className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-      </div>
-    </div>
-  )
-}
-
-export default App;

@@ -11,8 +11,8 @@ const mysql = require('mysql');
 const async = require('async');
 
 const apiHandler = require('./server/apiHandler');
-const dbConfig = require('./server/dbConfig');
-const mailerConfig = require('./server/mailerConfig');
+const dbConfig = require('./server/config/dbConfig');
+const mailerConfig = require('./server/config/mailerConfig');
 
 const port = process.env.PORT || 3001;
 const __env__ = process.env.NODE_ENV;
