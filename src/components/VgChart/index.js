@@ -10,7 +10,7 @@ export default class VgChart extends Component {
     
     render() {
         return (
-            <div className="App-header" style={{backgroundColor: 'lightgray'}}>
+            <div>
                 <Vega
                     spec={{
                         ...spec1,

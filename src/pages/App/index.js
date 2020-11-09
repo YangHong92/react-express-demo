@@ -6,7 +6,7 @@ import {
   NavLink
 } from 'react-router-dom';
 import _ from 'lodash';
-import VgChart from '../VgChart';
+import Chart from '../Chart';
 import Dashboard from '../Dashboard';
 
 import '../../styles/App.scss';
@@ -54,7 +54,7 @@ export default class App extends Component {
         <main>
           <Switch>
             <Route exact path="/chart">
-              <VgChart />
+              <Chart />
             </Route>
             <Route exact path="/dashboard">
               <Dashboard />
