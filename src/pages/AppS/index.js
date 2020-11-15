@@ -10,7 +10,7 @@ import Table from '../../components/table';
 import LogoutButton from '../LogoutButton';
 import _ from 'lodash';
 
-import logo from '../../img/logo.svg';
+import logo from '../../assets/img/logo.svg';
 import '../../styles/App.scss';
 
 class AppS extends Component {
