@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 import { fetchReq } from '../../utils/utils';
 
-class ResetPassword extends Component {
+class ResetPasswordPage extends Component {
     constructor(props) {
         super(props);
     
@@ -82,4 +82,4 @@ class ResetPassword extends Component {
     }
 }
 
-export default withRouter(ResetPassword)
+export default withRouter(ResetPasswordPage)

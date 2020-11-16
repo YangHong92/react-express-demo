@@ -5,6 +5,9 @@ import { getToken } from './utils/utils';
 import AppS from './pages/AppS';
 import App from './pages/App';
 import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import RegisterPage from './pages/RegisterPage';
 
 import * as serviceWorker from './serviceWorker';
 import './index.scss';
@@ -16,7 +19,16 @@ ReactDOM.render(
       <Switch>
         <Route path="/login">
           <LoginPage />
-        </Route>  
+        </Route>
+        <Route path="/register">
+          <RegisterPage />
+        </Route>
+        <Route path="/forgot-password">
+          <ForgotPasswordPage />
+        </Route>
+        <Route path="/reset-password">
+          <ResetPasswordPage />
+        </Route>
         <PrivateRoute path="/s">
           <AppS />
         </PrivateRoute>

@@ -2,7 +2,7 @@ import {stock} from './data';
 
 export const spec1 = {
     title: {
-        text: 'ECharts entry example'
+        text: 'ECharts'
     },
     tooltip: {},
     legend: {

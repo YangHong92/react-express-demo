@@ -10,7 +10,7 @@ export default class Chart extends Component {
     render() {
         return (
             <div>
-                <VgChart />
+                {/* <VgChart /> */}
                 <EChart />
             </div>
         )

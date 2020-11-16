@@ -9,7 +9,7 @@ import _ from 'lodash';
 import Chart from '../Chart';
 import Dashboard from '../Dashboard';
 
-import '../../styles/App.scss';
+import '../../styles/app.scss';
 
 export default class App extends Component {
   constructor(props) {

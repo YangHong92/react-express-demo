@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
 import {
-    Switch,
-    Route,
-    Redirect,
     NavLink
 } from 'react-router-dom';
 import _ from 'lodash';
-import Chart from '../Chart';
-import Dashboard from '../Dashboard';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -34,7 +29,7 @@ import team_1 from "../../assets/img/team/team-1.jpg";
 import team_2 from "../../assets/img/team/team-2.jpg";
 import team_3 from "../../assets/img/team/team-3.jpg";
 
-import '../../styles/App.scss';
+import '../../styles/app.scss';
 
 export default class App extends Component {
     constructor(props) {
@@ -43,6 +38,7 @@ export default class App extends Component {
             isMobileNavClosed: true
         }
         this.mobileNavToggler = this.mobileNavToggler.bind(this);
+        this.scrollTo = this.scrollTo.bind(this);
     }
 
     componentDidMount() {
@@ -61,6 +57,13 @@ export default class App extends Component {
         })
     }
 
+    scrollTo(){
+        const {isMobileNavClosed} = this.state;
+        this.setState({
+            isMobileNavClosed: !isMobileNavClosed
+        })
+    }
+
     render() {
         const {isMobileNavClosed} = this.state;
         return (
@@ -73,14 +76,14 @@ export default class App extends Component {
                         <nav className="mobile-nav d-lg-none" style={isMobileNavClosed ? {} : {visibility: 'visible', opacity: 1}}>
                             <ul>
                                 <li className="active">
-                                    <a href="#hero">Home</a>
+                                    <a href="#hero" onClick={this.scrollTo}>Home</a>
                                 </li>
-                                <li><a href="#about">About</a></li>
-                                <li><a href="#services">Services</a></li>
-                                <li><a href="#portfolio">Portfolio</a></li>
-                                <li><a href="#pricing">Pricing</a></li>
-                                <li><a href="#team">Team</a></li>
-                                <li><a href="#contact">Contact</a></li>
+                                <li><a href="#about" onClick={this.scrollTo}>About</a></li>
+                                <li><a href="#services" onClick={this.scrollTo}>Services</a></li>
+                                <li><a href="#portfolio" onClick={this.scrollTo}>Portfolio</a></li>
+                                <li><a href="#pricing" onClick={this.scrollTo}>Pricing</a></li>
+                                <li><a href="#team" onClick={this.scrollTo}>Team</a></li>
+                                <li><a href="#contact" onClick={this.scrollTo}>Contact</a></li>
                                 <li>
                                     <NavLink to="/s">
                                         <i className="fa fa-user-o"></i>
