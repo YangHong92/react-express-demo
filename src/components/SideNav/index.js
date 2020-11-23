@@ -13,10 +13,10 @@ export default class SideNav extends Component {
                     <div className="sb-sidenav-menu">
                         <div className="nav">
                             <div className="sb-sidenav-menu-heading">Core</div>
-                            <a className="nav-link" href="index.html">
+                            <NavLink className="nav-link" to="/s/home">
                                 <div className="sb-nav-link-icon"><i className="fas fa-tachometer-alt"></i></div>
                                     Dashboard
-                            </a>
+                            </NavLink>
                             <div className="sb-sidenav-menu-heading">Interface</div>
                             <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div className="sb-nav-link-icon"><i className="fas fa-columns"></i></div>
@@ -61,10 +61,10 @@ export default class SideNav extends Component {
                                 </nav>
                             </div>
                             <div className="sb-sidenav-menu-heading">Addons</div>
-                            <a className="nav-link" href="charts.html">
+                            <NavLink className="nav-link" to="/s/progress-step">
                                 <div className="sb-nav-link-icon"><i className="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
+                                Progress Step
+                            </NavLink>
                             <a className="nav-link" href="tables.html">
                                 <div className="sb-nav-link-icon"><i className="fas fa-table"></i></div>
                                 Tables

@@ -11,6 +11,7 @@ import _ from 'lodash';
 import LogoutButton from '../LogoutButton';
 import Chart from '../Chart';
 import SideNav from '../../components/SideNav'
+import ProgressStep from '../../components/progressStep';
 
 import '../../styles/apps.scss';
 
@@ -71,6 +72,9 @@ class AppS extends Component {
                 </Route>
                 <Route path="/s/apis">
 
+                </Route>
+                <Route path="/s/progress-step">
+                  <ProgressStep />
                 </Route>
                 <Route path="/s">
                   <Redirect to='/s/home' />

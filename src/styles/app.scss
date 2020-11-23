@@ -55,6 +55,67 @@
 
 
 
+@keyframes noise-anim {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(1/$steps))} {
+      clip: rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+@keyframes noise-anim-2 {
+  $steps: 20;
+  @for $i from 0 through $steps {
+    #{percentage($i*(1/$steps))} {
+      clip: rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.noise-anim-text {
+  color: #fff;
+  // font-size: 7rem;
+  position: relative;
+  // line-height: 1;
+  // width: 12.5rem;
+  margin: 0 0 10px 0;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 56px;
+  text-transform: uppercase;
+  &:before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: 1px 0 #4e73df;
+    top: 0;
+    color: #fff;
+    background: transparent;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim-2 3s infinite linear alternate-reverse;
+  }
+  &:after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -1px 0 #e74a3b;
+    top: 0;
+    color: #fff;
+    background: transparent;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim 2s infinite linear alternate-reverse;
+  }
+}
+@media (max-width: 768px){
+  #home .noise-anim-text {
+    font-size: 28px;
+    width: 12.5rem;
+    line-height: 36px;
+  }
+}
+
+
 
 
 
@@ -294,10 +355,14 @@ h1, h2, h3, h4, h5, h6 {
   transition: 0.3s;
   font-size: 14px;
   font-family: "Open Sans", sans-serif;
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+  }
 }
 
 .nav-menu > ul > li:hover, .nav-menu .active {
-  background: #cc1616;
+  background: rgba(204, 24, 22, 0.7);;
 }
 
 .nav-menu .drop-down ul {
@@ -487,7 +552,7 @@ h1, h2, h3, h4, h5, h6 {
 /*--------------------------------------------------------------
 # Hero Section
 --------------------------------------------------------------*/
-#hero {
+#home {
   width: 100%;
   height: 100vh;
   background: url("../assets/img/hero-bg.jpg") top center;
@@ -495,7 +560,7 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
 }
 
-#hero:before {
+#home:before {
   content: "";
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
@@ -505,11 +570,11 @@ h1, h2, h3, h4, h5, h6 {
   right: 0;
 }
 
-#hero .container {
+#home .container {
   padding-top: 70px;
 }
 
-#hero h1 {
+#home h1 {
   margin: 0 0 10px 0;
   font-size: 48px;
   font-weight: 700;
@@ -518,13 +583,13 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
 }
 
-#hero h2 {
+#home h2 {
   color: #eee;
   margin-bottom: 30px;
   font-size: 24px;
 }
 
-#hero .btn-get-started {
+#home .btn-get-started {
   font-family: "Raleway", sans-serif;
   text-transform: uppercase;
   font-weight: 500;
@@ -537,29 +602,29 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
 }
 
-#hero .btn-get-started:hover {
+#home .btn-get-started:hover {
   background: #cc1616;
   border-color: #cc1616;
 }
 
 @media (min-width: 1024px) {
-  #hero {
+  #home {
     background-attachment: fixed;
   }
 }
 
 @media (max-width: 768px) {
-  #hero {
+  #home {
     text-align: center;
   }
-  #hero .container {
+  #home .container {
     padding-top: 40px;
   }
-  #hero h1 {
+  #home h1 {
     font-size: 28px;
     line-height: 36px;
   }
-  #hero h2 {
+  #home h2 {
     font-size: 18px;
     line-height: 24px;
     margin-bottom: 30px;

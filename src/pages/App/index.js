@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
 import {
-    NavLink
+    NavLink, Link
 } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -31,59 +32,135 @@ import team_3 from "../../assets/img/team/team-3.jpg";
 
 import '../../styles/app.scss';
 
-export default class App extends Component {
+class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMobileNavClosed: true
+            isMobileNavClosed: true,
+            curSection: this.props.location.hash.replace("#", "") || 'home'
         }
+
+        this.handleScroll = this.handleScroll.bind(this);
         this.mobileNavToggler = this.mobileNavToggler.bind(this);
+        this.onMobileNavClick = this.onMobileNavClick.bind(this);
+        this.onNavClick = this.onNavClick.bind(this);
         this.scrollTo = this.scrollTo.bind(this);
+
+        this.home = React.createRef();
+        this.about = React.createRef();
+        this.services = React.createRef();
+        this.portfolio = React.createRef();
+        this.pricing = React.createRef();
+        this.team = React.createRef();
+        this.contact = React.createRef();
     }
 
     componentDidMount() {
         AOS.init({ duration: 2000 });
+        this.home.current.addEventListener('scroll', this.handleScroll)
     }
 
     componentWillReceiveProps() {
         AOS.refresh();
     }
 
-    mobileNavToggler(e){
+    componentWillUnmount() {
+        this.home.current.removeEventListener('scroll', this.handleScroll)
+    }
+
+    handleScroll(e) {
+        console.log("scroll in one element ")
+        const element = e.target.scrollingElement
+
+        console.log("element's height including overflow hidden: ", element.scrollHeight, 
+                    "\n, element's scroll to topmost div: ", element.scrollTop, 
+                    "\n, element content's view height: ", element.clientHeight)
+
+        let top = element.scrollTop;
+        let bottom = element.clientHeight;
+        let curPos = element.scrollHeight;
+        if (curPos >= top && curPos <= bottom) {
+          // do something at end of scroll
+          
+        }
+        // const scrollY = window.scrollY //Don't get confused by what's scrolling - It's not the window
+        // const homeScrollTop = this.home.current.scrollTop
+        // const aboutScrollTop = this.about.current.scrollTop
+        // const servicesScrollTop = this.services.current.scrollTop
+        // const portfolioScrollTop = this.portfolio.current.scrollTop
+        // const pricingScrollTop = this.pricing.current.scrollTop
+        // const teamScrollTop = this.team.current.scrollTop
+        // const contactScrollTop = this.contact.current.scrollTop
+
+        // console.log(`onScroll *** homeScrollTop.scrollTop: ${homeScrollTop}, contactScrollTop.scrollTop: ${contactScrollTop}`)
+    }
+
+    mobileNavToggler(e) {
         e.preventDefault();
-        const {isMobileNavClosed} = this.state;
+        const { isMobileNavClosed } = this.state;
         this.setState({
             isMobileNavClosed: !isMobileNavClosed
         })
     }
 
-    scrollTo(){
-        const {isMobileNavClosed} = this.state;
+    onMobileNavClick(key) {
+        const { isMobileNavClosed } = this.state;
         this.setState({
+            curSection: key,
             isMobileNavClosed: !isMobileNavClosed
-        })
+        }, () => this.scrollTo(key))
+    }
+
+    onNavClick(key) {
+        this.setState({
+            curSection: key
+        }, () => this.scrollTo(key))
+    }
+
+    scrollTo(key) {
+        const element = document.getElementById(key);
+
+        setTimeout(() => {
+            window.scrollTo({
+                behavior: element ? "smooth" : "auto",
+                top: element ? element.offsetTop : 0
+            });
+        }, 100);
+
     }
 
     render() {
-        const {isMobileNavClosed} = this.state;
+        const { isMobileNavClosed, curSection } = this.state;
         return (
             <div>
                 <header id="header" className="fixed-top">
                     <div className="container d-flex align-items-center">
 
-                        <h1 className="logo mr-auto"><a href="#hero">Day</a></h1>
-                        
-                        <nav className="mobile-nav d-lg-none" style={isMobileNavClosed ? {} : {visibility: 'visible', opacity: 1}}>
+                        <h1 className="logo mr-auto"><Link to="#home">Day</Link></h1>
+
+                        <nav className="mobile-nav d-lg-none" style={isMobileNavClosed ? {} : { visibility: 'visible', opacity: 1 }}>
                             <ul>
-                                <li className="active">
-                                    <a href="#hero" onClick={this.scrollTo}>Home</a>
+                                <li className={curSection === 'home' ? "active" : ''}>
+                                    <Link to="#home" onClick={() => this.onMobileNavClick('home')}>Home</Link>
                                 </li>
-                                <li><a href="#about" onClick={this.scrollTo}>About</a></li>
-                                <li><a href="#services" onClick={this.scrollTo}>Services</a></li>
-                                <li><a href="#portfolio" onClick={this.scrollTo}>Portfolio</a></li>
-                                <li><a href="#pricing" onClick={this.scrollTo}>Pricing</a></li>
-                                <li><a href="#team" onClick={this.scrollTo}>Team</a></li>
-                                <li><a href="#contact" onClick={this.scrollTo}>Contact</a></li>
+                                <li className={curSection === 'about' ? "active" : ''}>
+                                    <Link to="#about" onClick={() => this.onMobileNavClick('about')}>About</Link>
+                                </li>
+                                <li className={curSection === 'services' ? "active" : ''}>
+                                    <Link to="#services" onClick={() => this.onMobileNavClick('services')}>Services</Link>
+                                </li>
+                                <li className={curSection === 'portfolio' ? "active" : ''}>
+                                    <Link to="#portfolio" onClick={() => this.onMobileNavClick('portfolio')}>Portfolio</Link>
+                                </li>
+                                <li className={curSection === 'pricing' ? "active" : ''}>
+                                    <Link to="#pricing" onClick={() => this.onMobileNavClick('pricing')}>Pricing</Link>
+                                </li>
+                                <li className={curSection === 'team' ? "active" : ''}>
+                                    <Link to="#team" onClick={() => this.onMobileNavClick('team')}>Team</Link>
+                                </li>
+                                <li className={curSection === 'contact' ? "active" : ''}>
+                                    <Link to="#contact" onClick={() => this.onMobileNavClick('contact')}>Contact</Link>
+                                </li>
                                 <li>
                                     <NavLink to="/s">
                                         <i className="fa fa-user-o"></i>
@@ -94,18 +171,28 @@ export default class App extends Component {
                         <button type="button" className="mobile-nav-toggle d-lg-none" onClick={this.mobileNavToggler}>
                             <i className={`fa ${isMobileNavClosed ? 'fa-bars' : 'fa-times'}`}></i>
                         </button>
-                        <div className="mobile-nav-overly" style={isMobileNavClosed ? {display: 'none'} : {display: 'block'}}></div>
+                        <div className="mobile-nav-overly" style={isMobileNavClosed ? { display: 'none' } : { display: 'block' }}></div>
 
                         <nav className="nav-menu d-none d-lg-block">
                             <ul>
-                                <li className="active">
-                                    <a href="#hero">Home</a>
+                                <li className={curSection === 'home' ? "active" : ''}>
+                                    <Link to="#home" onClick={() => this.onNavClick('home')}>Home</Link>
                                 </li>
-                                <li><a href="#about">About</a></li>
-                                <li><a href="#services">Services</a></li>
-                                <li><a href="#portfolio">Portfolio</a></li>
-                                <li><a href="#pricing">Pricing</a></li>
-                                <li><a href="#team">Team</a></li>
+                                <li className={curSection === 'about' ? "active" : ''}>
+                                    <Link to="#about" onClick={() => this.onNavClick('about')}>About</Link>
+                                </li>
+                                <li className={curSection === 'services' ? "active" : ''}>
+                                    <Link to="#services" onClick={() => this.onNavClick('services')}>Services</Link>
+                                </li>
+                                <li className={curSection === 'portfolio' ? "active" : ''}>
+                                    <Link to="#portfolio" onClick={() => this.onNavClick('portfolio')}>Portfolio</Link>
+                                </li>
+                                <li className={curSection === 'pricing' ? "active" : ''}>
+                                    <Link to="#pricing" onClick={() => this.onNavClick('pricing')}>Pricing</Link>
+                                </li>
+                                <li className={curSection === 'team' ? "active" : ''}>
+                                    <Link to="#team" onClick={() => this.onNavClick('team')}>Team</Link>
+                                </li>
                                 {/* <li className="drop-down"><a href="">Drop Down</a>
                                     <ul>
                                         <li><a href="#">Drop Down 1</a></li>
@@ -123,7 +210,9 @@ export default class App extends Component {
                                         <li><a href="#">Drop Down 4</a></li>
                                     </ul>
                                 </li> */}
-                                <li><a href="#contact">Contact</a></li>
+                                <li className={curSection === 'contact' ? "active" : ''}>
+                                    <Link to="#contact" onClick={() => this.onNavClick('contact')}>Contact</Link>
+                                </li>
                                 <li>
                                     <NavLink to="/s">
                                         <i className="fa fa-user-o"></i>
@@ -136,9 +225,10 @@ export default class App extends Component {
                 </header>
 
 
-                <section id="hero" className="d-flex align-items-center">
+                <section id="home" className="d-flex align-items-center" ref={this.home} onScroll={this.handleScroll}>
                     <div className="container position-relative" data-aos="fade-up" data-aos-delay="500">
-                        <h1>Welcome to Day</h1>
+                        {/* <h1>Welcome to Day</h1> */}
+                        <div className="noise-anim-text mx-auto" data-text="Welcome to Day">Welcome to Day</div>
                         <h2>We are team of talanted designers making websites with Bootstrap</h2>
                         <a href="#about" className="btn-get-started scrollto">Get Started</a>
                     </div>
@@ -572,7 +662,7 @@ export default class App extends Component {
                         </div>
                     </section>
 
-                    <section id="contact" className="contact">
+                    <section id="contact" className="contact" ref={this.contact} onScroll={this.handleScroll}>
                         <div className="container">
 
                             <div className="section-title">
@@ -584,7 +674,7 @@ export default class App extends Component {
                             <div className="row" data-aos="fade-up">
                                 <div className="col-lg-6">
                                     <div className="info-box mb-4">
-                                        <i className="bx bx-map"></i>
+                                        <i className="fa fa-map-marker"></i>
                                         <h3>Our Address</h3>
                                         <p>A108 Adam Street, New York, NY 535022</p>
                                     </div>
@@ -592,7 +682,7 @@ export default class App extends Component {
 
                                 <div className="col-lg-3 col-md-6">
                                     <div className="info-box  mb-4">
-                                        <i className="bx bx-envelope"></i>
+                                        <i className="fa fa-envelope"></i>
                                         <h3>Email Us</h3>
                                         <p>contact@example.com</p>
                                     </div>
@@ -600,7 +690,7 @@ export default class App extends Component {
 
                                 <div className="col-lg-3 col-md-6">
                                     <div className="info-box  mb-4">
-                                        <i className="bx bx-phone-call"></i>
+                                        <i className="fa fa-phone"></i>
                                         <h3>Call Us</h3>
                                         <p>+1 5589 55488 55</p>
                                     </div>
@@ -726,3 +816,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default withRouter(App);
