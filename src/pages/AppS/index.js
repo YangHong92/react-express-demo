@@ -5,9 +5,7 @@ import {
   Redirect,
   Link
 } from 'react-router-dom';
-import { fetchReq } from '../../utils/utils';
-
-import _ from 'lodash';
+import CallAPI from '../../components/callAPI';
 import LogoutButton from '../LogoutButton';
 import Chart from '../Chart';
 import SideNav from '../../components/SideNav'
@@ -71,7 +69,7 @@ class AppS extends Component {
                   <Chart />
                 </Route>
                 <Route path="/s/apis">
-
+                  <CallAPI />
                 </Route>
                 <Route path="/s/progress-step">
                   <ProgressStep />
