@@ -53,11 +53,19 @@ class App extends Component {
         this.pricing = React.createRef();
         this.team = React.createRef();
         this.contact = React.createRef();
+
+        this.sections = ['header', 'home', 'about', 'why-us', 'clients', 'services', 'cta', 'portfolio', 'pricing', 'team', 'contact'];
+        this.eleScrollHeight = {};
     }
 
     componentDidMount() {
-        AOS.init({ duration: 2000 });
-        this.home.current.addEventListener('scroll', this.handleScroll)
+        AOS.init({
+            duration: 1000,
+            easing: "ease-in-out",
+            once: true
+        });
+        window.addEventListener('scroll', this.handleScroll);
+        this.getElementsInitialScrollHeight();
     }
 
     componentWillReceiveProps() {
@@ -65,34 +73,53 @@ class App extends Component {
     }
 
     componentWillUnmount() {
-        this.home.current.removeEventListener('scroll', this.handleScroll)
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
+    getElementsInitialScrollHeight() {
+        let height = 0;
+
+        _.forEach(this.sections, (item) => {
+            // console.log(item, document.getElementById(item).clientHeight)
+            height = height + document.getElementById(item).clientHeight;
+            this.eleScrollHeight[item] = height;
+        })
     }
 
     handleScroll(e) {
-        console.log("scroll in one element ")
-        const element = e.target.scrollingElement
+        const element = e.target.scrollingElement;
+        let curPos = element.scrollTop;
 
-        console.log("element's height including overflow hidden: ", element.scrollHeight, 
-                    "\n, element's scroll to topmost div: ", element.scrollTop, 
-                    "\n, element content's view height: ", element.clientHeight)
-
-        let top = element.scrollTop;
-        let bottom = element.clientHeight;
-        let curPos = element.scrollHeight;
-        if (curPos >= top && curPos <= bottom) {
-          // do something at end of scroll
-          
+        if (curPos <= this.eleScrollHeight['home']) {
+            this.setState({
+                curSection: 'home'
+            })
+        } else if (curPos > this.eleScrollHeight['home'] && curPos <= this.eleScrollHeight['about']) {
+            this.setState({
+                curSection: 'about'
+            })
+        } else if (curPos > this.eleScrollHeight['about'] && curPos <= this.eleScrollHeight['services']) {
+            this.setState({
+                curSection: 'services'
+            })
+        } else if (curPos > this.eleScrollHeight['services'] && curPos <= this.eleScrollHeight['portfolio']) {
+            this.setState({
+                curSection: 'portfolio'
+            })
+        } else if (curPos > this.eleScrollHeight['portfolio'] && curPos <= this.eleScrollHeight['pricing']) {
+            this.setState({
+                curSection: 'pricing'
+            })
+        } else if (curPos > this.eleScrollHeight['pricing'] && curPos <= this.eleScrollHeight['team']) {
+            this.setState({
+                curSection: 'team'
+            })
+        } else if (curPos > this.eleScrollHeight['team'] && curPos <= this.eleScrollHeight['contact']) {
+            this.setState({
+                curSection: 'contact'
+            })
         }
-        // const scrollY = window.scrollY //Don't get confused by what's scrolling - It's not the window
-        // const homeScrollTop = this.home.current.scrollTop
-        // const aboutScrollTop = this.about.current.scrollTop
-        // const servicesScrollTop = this.services.current.scrollTop
-        // const portfolioScrollTop = this.portfolio.current.scrollTop
-        // const pricingScrollTop = this.pricing.current.scrollTop
-        // const teamScrollTop = this.team.current.scrollTop
-        // const contactScrollTop = this.contact.current.scrollTop
 
-        // console.log(`onScroll *** homeScrollTop.scrollTop: ${homeScrollTop}, contactScrollTop.scrollTop: ${contactScrollTop}`)
     }
 
     mobileNavToggler(e) {
@@ -225,7 +252,7 @@ class App extends Component {
                 </header>
 
 
-                <section id="home" className="d-flex align-items-center" ref={this.home} onScroll={this.handleScroll}>
+                <section id="home" className="d-flex align-items-center" ref={this.home}>
                     <div className="container position-relative" data-aos="fade-up" data-aos-delay="500">
                         {/* <h1>Welcome to Day</h1> */}
                         <div className="noise-anim-text mx-auto" data-text="Welcome to Day">Welcome to Day</div>
@@ -434,7 +461,7 @@ class App extends Component {
 
                             <div className="row portfolio-container" data-aos="fade-up" data-aos-delay="150">
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-app">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-app">
                                     <img src={portfolio_1} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>App 1</h4>
@@ -442,9 +469,9 @@ class App extends Component {
                                         <a href={portfolio_1} data-gall="portfolioGallery" className="venobox preview-link" title="App 1"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-web">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-web">
                                     <img src={portfolio_2} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>Web 3</h4>
@@ -452,9 +479,9 @@ class App extends Component {
                                         <a href={portfolio_2} data-gall="portfolioGallery" className="venobox preview-link" title="Web 3"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-app">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-app">
                                     <img src={portfolio_3} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>App 2</h4>
@@ -462,7 +489,7 @@ class App extends Component {
                                         <a href={portfolio_3} data-gall="portfolioGallery" className="venobox preview-link" title="App 2"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div>  */}
 
                                 <div className="col-lg-4 col-md-6 portfolio-item filter-card">
                                     <img src={portfolio_4} className="img-fluid" alt="" />
@@ -474,7 +501,7 @@ class App extends Component {
                                     </div>
                                 </div>
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-web">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-web">
                                     <img src={portfolio_5} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>Web 2</h4>
@@ -482,9 +509,9 @@ class App extends Component {
                                         <a href={portfolio_5} data-gall="portfolioGallery" className="venobox preview-link" title="Web 2"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-app">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-app">
                                     <img src={portfolio_6} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>App 3</h4>
@@ -492,7 +519,7 @@ class App extends Component {
                                         <a href={portfolio_6} data-gall="portfolioGallery" className="venobox preview-link" title="App 3"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="col-lg-4 col-md-6 portfolio-item filter-card">
                                     <img src={portfolio_7} className="img-fluid" alt="" />
@@ -514,7 +541,7 @@ class App extends Component {
                                     </div>
                                 </div>
 
-                                <div className="col-lg-4 col-md-6 portfolio-item filter-web">
+                                {/* <div className="col-lg-4 col-md-6 portfolio-item filter-web">
                                     <img src={portfolio_9} className="img-fluid" alt="" />
                                     <div className="portfolio-info">
                                         <h4>Web 3</h4>
@@ -522,7 +549,7 @@ class App extends Component {
                                         <a href={portfolio_9} data-gall="portfolioGallery" className="venobox preview-link" title="Web 3"><i className="bx bx-plus"></i></a>
                                         <a href="portfolio-details.html" className="details-link" title="More Details"><i className="bx bx-link"></i></a>
                                     </div>
-                                </div>
+                                </div> */}
 
                             </div>
 
@@ -662,7 +689,7 @@ class App extends Component {
                         </div>
                     </section>
 
-                    <section id="contact" className="contact" ref={this.contact} onScroll={this.handleScroll}>
+                    <section id="contact" className="contact" ref={this.contact}>
                         <div className="container">
 
                             <div className="section-title">
@@ -756,11 +783,11 @@ class App extends Component {
                                             <strong>Email:</strong> info@example.com<br />
                                         </p>
                                         <div className="social-links mt-3">
-                                            <a href="#" className="twitter"><i className="bx bxl-twitter"></i></a>
-                                            <a href="#" className="facebook"><i className="bx bxl-facebook"></i></a>
-                                            <a href="#" className="instagram"><i className="bx bxl-instagram"></i></a>
-                                            <a href="#" className="google-plus"><i className="bx bxl-skype"></i></a>
-                                            <a href="#" className="linkedin"><i className="bx bxl-linkedin"></i></a>
+                                            <a href="#" className="twitter"><i className="fab fa-twitter"></i></a>
+                                            <a href="#" className="facebook"><i className="fab fa-facebook"></i></a>
+                                            <a href="#" className="instagram"><i className="fab fa-instagram"></i></a>
+                                            <a href="#" className="google-plus"><i className="fab fa-skype"></i></a>
+                                            <a href="#" className="linkedin"><i className="fab fa-linkedin"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -790,7 +817,7 @@ class App extends Component {
                                 <div className="col-lg-4 col-md-6 footer-newsletter">
                                     <h4>Our Newsletter</h4>
                                     <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-                                    <form action="" method="post">
+                                    <form>
                                         <input type="email" name="email" /><input type="submit" value="Subscribe" />
                                     </form>
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import _ from 'lodash';
 import pay1 from '../../assets/img/progressStep/wizard_v3_icon_1.png';
 import pay2 from '../../assets/img/progressStep/wizard_v3_icon_2.png'
 import '../../styles/progressStep.scss';
@@ -10,11 +10,20 @@ export default class ProgressStep extends Component {
 
         this.state = {
             showCard: 0, //[0-3]
+            gender: 'male',
+            payment_type: 'credit card'
         }
-
+        
+        this.handleChange = this.handleChange.bind(this);
         this.goPrevious = this.goPrevious.bind(this);
         this.goNext = this.goNext.bind(this);
         this.submitPayment = this.submitPayment.bind(this);
+    }
+
+    handleChange(e, key){
+        this.setState({
+            [key]: e.target.value
+        })
     }
 
     goPrevious(e) {
@@ -35,11 +44,16 @@ export default class ProgressStep extends Component {
 
     submitPayment(e) {
         e.preventDefault();
-        console.log("submitPayment")
+
+        const { email, username, password_1, first_name, last_name, gender, bod_day, bod_month, 
+             bod_year, phone, address, payment_type, card_holder, card_no, cvc, exp_month, exp_year } = this.state;
+             
+        console.log(`${email}, ${username}, ${password_1}, ${first_name}, ${last_name}, ${gender}, ${bod_day}, ${bod_month}, 
+                    ${bod_year}, ${phone}, ${address}, ${payment_type}, ${card_holder}, ${card_no}, ${cvc}, ${exp_month}, ${exp_year}`)
     }
 
     render() {
-        const { showCard } = this.state;
+        const { showCard, email, first_name, last_name, phone, card_no, gender, address, payment_type} = this.state;
 
         return (
             <div className="page-content">
@@ -101,7 +115,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="text" name="email" id="email" className="form-control" required />
+                                                            <input type="text" onChange={(e)=>this.handleChange(e, 'email')} id="email" className="form-control" required />
                                                             <span className="label">Email Address</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -110,7 +124,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="username" name="username" required />
+                                                            <input type="text" className="form-control" id="username" onChange={(e)=>this.handleChange(e, 'username')} required />
                                                             <span className="label">Username</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -119,7 +133,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="password" name="password_1" id="password_1" className="form-control" required />
+                                                            <input type="password" onChange={(e)=>this.handleChange(e, 'password_1')} id="password_1" className="form-control" required />
                                                             <span className="label">Password</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -128,7 +142,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="password" name="comfirm_password_1" id="comfirm_password_1" className="form-control" required />
+                                                            <input type="password" onChange={(e)=>this.handleChange(e, 'comfirm_password_1')} id="comfirm_password_1" className="form-control" required />
                                                             <span className="label">Comfirm Password</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -157,44 +171,44 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="first_name" name="first_name" required />
+                                                            <input type="text" className="form-control" onChange={(e)=>this.handleChange(e, 'first_name')} name="first_name" required />
                                                             <span className="label">First Name*</span>
                                                             <span className="border"></span>
                                                         </label>
                                                     </div>
                                                     <div className="form-holder">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="last_name" name="last_name" required />
+                                                            <input type="text" className="form-control" onChange={(e)=>this.handleChange(e, 'last_name')} name="last_name" required />
                                                             <span className="label">Last Name*</span>
                                                             <span className="border"></span>
                                                         </label>
                                                     </div>
                                                 </div>
                                                 <div className="form-row">
-                                                    <div id="radio">
+                                                    <div id="gender">
                                                         <label>Gender*:</label>
-                                                        <input type="radio" name="gender" value="male" defaultChecked className="radio-1" /> Male
-  										                <input type="radio" name="gender" value="female" /> Female
+                                                        <input type="radio" name="gender" onChange={(e)=>this.handleChange(e, 'gender')} value="male" defaultChecked className="radio-1" /> Male
+  										                <input type="radio" name="gender" onChange={(e)=>this.handleChange(e, 'gender')} value="female" /> Female
 									                </div>
                                                 </div>
                                                 <div className="form-row form-row-date">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="special-label">Date of Birth*:</label>
-                                                        <select name="date" id="date" required>
+                                                        <select onChange={(e)=>this.handleChange(e, 'bod_day')} id="bod_day" required>
                                                             <option value="Day" disabled="" >Day</option>
                                                             <option value="16">16</option>
                                                             <option value="17">17</option>
                                                             <option value="18">18</option>
                                                             <option value="19">19</option>
                                                         </select>
-                                                        <select name="month" id="month" required>
+                                                        <select onChange={(e)=>this.handleChange(e, 'bod_month')} id="bod_month" required>
                                                             <option value="Month" disabled="" >Month</option>
                                                             <option value="Feb">Feb</option>
                                                             <option value="Mar">Mar</option>
                                                             <option value="Apr">Apr</option>
                                                             <option value="May">May</option>
                                                         </select>
-                                                        <select name="year" id="year" required>
+                                                        <select onChange={(e)=>this.handleChange(e, 'bod_year')} id="bod_year" required>
                                                             <option value="Year" disabled="" >Year</option>
                                                             <option value="2017">2017</option>
                                                             <option value="2016">2016</option>
@@ -207,7 +221,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="phone" name="phone" required />
+                                                            <input type="text" className="form-control" id="phone" onChange={(e)=>this.handleChange(e, 'phone')} required />
                                                             <span className="label">Phone Number*</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -216,7 +230,7 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-1">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="address" name="address" required />
+                                                            <input type="text" className="form-control" id="address" onChange={(e)=>this.handleChange(e, 'address')} required />
                                                             <span className="label">Address*</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -244,16 +258,16 @@ export default class ProgressStep extends Component {
                                                 <h3>Payment Information:</h3>
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
-                                                        <input type="radio" name="radio1" id="pay-1" value="pay-1" defaultChecked />
+                                                        <input type="radio" name="payment-type" onChange={(e)=>this.handleChange(e, 'payment_type')} id="pay-1" value="credit card" defaultChecked />
                                                         <label className="pay-1-label" htmlFor="pay-1"><img src={pay1} alt="pay-1" />Credit Card</label>
-                                                        <input type="radio" name="radio1" id="pay-2" value="pay-2" />
-                                                        <label className="pay-2-label" htmlFor="pay-1"><img src={pay2} alt="pay-2" />Paypal</label>
+                                                        <input type="radio" name="payment-type" onChange={(e)=>this.handleChange(e, 'payment_type')} id="pay-2" value="paypal" />
+                                                        <label className="pay-2-label" htmlFor="pay-2"><img src={pay2} alt="pay-2" />Paypal</label>
                                                     </div>
                                                 </div>
                                                 <div className="form-row">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="holder" name="holder" required />
+                                                            <input type="text" className="form-control" id="card-holder" onChange={(e)=>this.handleChange(e, 'card_holder')} required />
                                                             <span className="label">Holder Name*</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -262,14 +276,14 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row">
                                                     <div className="form-holder">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="card" name="card" required />
+                                                            <input type="text" className="form-control" id="card-no" onChange={(e)=>this.handleChange(e, 'card_no')} required />
                                                             <span className="label">Card Number*</span>
                                                             <span className="border"></span>
                                                         </label>
                                                     </div>
                                                     <div className="form-holder">
                                                         <label className="form-row-inner">
-                                                            <input type="text" className="form-control" id="cvc" name="cvc" required />
+                                                            <input type="text" className="form-control" id="cvc" onChange={(e)=>this.handleChange(e, 'cvc')} required />
                                                             <span className="label">CVC*</span>
                                                             <span className="border"></span>
                                                         </label>
@@ -278,14 +292,14 @@ export default class ProgressStep extends Component {
                                                 <div className="form-row form-row-date form-row-date-1">
                                                     <div className="form-holder form-holder-2">
                                                         <label className="special-label">Expiry Date*:</label>
-                                                        <select name="month_1" id="month_1">
+                                                        <select onChange={(e)=>this.handleChange(e, 'exp_month')} id="exp_month">
                                                             <option value="Month" disabled="" >Month</option>
                                                             <option value="Feb">Feb</option>
                                                             <option value="Mar">Mar</option>
                                                             <option value="Apr">Apr</option>
                                                             <option value="May">May</option>
                                                         </select>
-                                                        <select name="year_1" id="year_1">
+                                                        <select onChange={(e)=>this.handleChange(e, 'exp_year')} id="exp_year">
                                                             <option value="Year" disabled="" >Year</option>
                                                             <option value="2017">2017</option>
                                                             <option value="2016">2016</option>
@@ -320,31 +334,31 @@ export default class ProgressStep extends Component {
                                                         <tbody>
                                                             <tr className="space-row">
                                                                 <th>Full Name:</th>
-                                                                <td id="fullname-val"></td>
+                                                                <td id="fullname-val">{`${first_name} ${last_name}`}</td>
                                                             </tr>
                                                             <tr className="space-row">
                                                                 <th>Email Address:</th>
-                                                                <td id="email-val"></td>
+                                                                <td id="email-val">{email}</td>
                                                             </tr>
                                                             <tr className="space-row">
                                                                 <th>Phone Number:</th>
-                                                                <td id="phone-val"></td>
+                                                                <td id="phone-val">{phone}</td>
                                                             </tr>
                                                             <tr className="space-row">
-                                                                <th>User:</th>
-                                                                <td id="username-val"></td>
+                                                                <th>Card Number:</th>
+                                                                <td id="username-val">{card_no}</td>
                                                             </tr>
                                                             <tr className="space-row">
                                                                 <th>Gender:</th>
-                                                                <td id="gender-val"></td>
+                                                                <td id="gender-val">{gender}</td>
                                                             </tr>
                                                             <tr className="space-row">
                                                                 <th>Address:</th>
-                                                                <td id="address-val"></td>
+                                                                <td id="address-val">{address}</td>
                                                             </tr>
                                                             <tr className="space-row">
                                                                 <th>Card Type:</th>
-                                                                <td id="pay-val">Credit Card</td>
+                                                                <td id="pay-val">{payment_type}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
